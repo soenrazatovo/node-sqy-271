@@ -3,6 +3,8 @@ const router = express.Router()
 
 const db = require("../config/db.js")
 
+// TODO : The 2 get request can be merged with optional parameters
+
 router.get("/", (req, res) => {
     const sql = "SELECT * FROM Todos"
     db.query(sql, (err, todos) => {
@@ -16,6 +18,21 @@ router.get("/", (req, res) => {
     })
 })
 
+router.get("/:id", (req,res) => {
+    const sql = req.params.id ? "SELECT * FROM Todos WHERE id = ?" : "SELECT * FROM Todos"
+    const sqlVar = [req.params.id]
+    db.query(sql, sqlVar, (err, todos) => {
+        if (err) {
+            console.log(err)
+            res.json(err).status(500)
+        } else {
+            console.log(todos)
+            res.json(todos).status(200)
+        }
+    })
+
+})
+
 router.post("/add", (req, res) => {
     let {content} = req.body
     
@@ -25,7 +42,7 @@ router.post("/add", (req, res) => {
             console.log(err)
             res.json(err).status(500)
         } else {
-            res.json("Todo added sucessfully").status(200)
+            res.json(db_res).status(200)
         }
     })
 })
