@@ -53,10 +53,10 @@ router.post("/signup", async (req, res) => {
     }
 })
 
-// router.delete("/logout", (req, res) => {
-//     res.clearCookie("token", {httpOnly: true, secure: true, sameSite: 'Strict'})
-//     console.log("Logout")
-// })
+router.get("/logout", checkJWT, (req, res) => {
+    res.clearCookie("token", {httpOnly: true, secure: true, sameSite: 'Strict'})
+    .send().status(200)
+}) 
 
 router.get("/protected", checkJWT, (req, res) => {
     console.log(req.userInfo)
